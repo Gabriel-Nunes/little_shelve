@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# little_shelve
-A complete book sharing system for kids.
-=======
-<<<<<<< HEAD
+
 # Little Shelve 📚
 
 A complete book sharing system for kids.
@@ -36,11 +32,11 @@ A complete book sharing system for kids.
 #### Search bar is easy to use and provide a wide search to quickly find books, users or authors.
 #### Also has a notification sign upside to show user when someone ask for a book sharing request. 
 
-![alt](screenshots/home-screen.png)
+![alt](screenshots/nav-bar.png)
 
 **Book sharing requests are easy to made and provide to users a clear management system to take care of lended books.**
 
-![BookRequest](screenshots/book-request.gif)
+![alt](screenshots/share-request.gif)
 
 #### To register a new book, user can take advantage of **Google Books API** to search book details.
 
@@ -84,6 +80,4 @@ Finally, reboot your system, go to the project directory and run:
 
 Your books sharing system is suposed to be running on 0.0.0.0:8000.
 
-#### Have fun! 🤓
-
->>>>>>> dev
+>>>>>>> #### Have fun! 🤓
