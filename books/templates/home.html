@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}Home | My Little Shelve{% endblock 'title' %}
+
+{% block 'header' %}
+
+{% endblock 'header' %}
+
+{% block 'body' %}
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+
+      {% if not search_args and not categorized_books %}
+        <section class="py-0" id="header">
+          <div class="container">
+            <div class="row align-items-center min-vh-75 min-vh-md-50">
+              <div class="col-12 text-center py-8">
+                <h1 class="lh-sm fs-lg-6 fs-xxl-7">Your Books app</h1>
+                <p class="text-700">Here you can manage and share your library</p>
+                <div class="mt-5"><a class="btn btn-sm btn-warning rounded-pill" href="{% url 'new_book' %}"><i class="bi bi-download"></i>Add book</a></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MAIN ROLL PANEL -->
+<section style="padding-top: 0%;">
+        <div class="container-fluid">
+          <div class="row gx-2">
+            <div class="col-12">
+              <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                <div class="swiper-wrapper">
+                  {% for book in my_books %}
+                      {% if book.front_cover %}
+                      <div class="swiper-slide h-auto">
+                          <a href="{% url 'book_view' book.id %}">
+                              <img class="w-100" src="{{ book.front_cover.url }}" alt="{{ book.title }}" />
+                          </a>
+                      </div>
+                      {% else %}
+                      <div class="swiper-slide h-auto">
+                        <a href="{% url 'book_view' book.id %}">
+                            <img class="w-100" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{ book.title }}" />
+                        </a>
+                    </div>
+                      {% endif %}
+                  {% endfor %}                    
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Books lended to Me -->
+      {% if lended_to_me %}
+        <section class="py-6">
+          <div class="col-12 text-center py-8">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">Books with me</h1>
+          </div>
+          <div class="container-fluid">
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                  <div class="swiper-wrapper">
+                      {% for book in lended_to_me %}
+                        {% if book.front_cover %}
+                        <div class="swiper-slide h-auto">
+                          <a href="{% url 'book_view' book.id %}">
+                                <img class="w-100" src="{{ book.front_cover.url }}" alt="{{ book.title }}" />
+                              </a>
+                            </div>
+                        {% else %}
+                        <div class="swiper-slide h-auto">
+                          <a href="{% url 'book_view' book.id %}">
+                            <img class="w-100" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{ book.title }}" />
+                          </a>
+                        </div>
+                        {% endif %}
+                      {% endfor %}                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+      {% endif %}   
+      
+      {% else %}
+      
+      <!-- SEARCHED BOOKS -->
+      {% if searched_books %}
+        <section>
+          <div class="col-12 text-center py-8">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">Books found</h1>
+          </div>
+          <div class="container-fluid">
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                  <div class="swiper-wrapper">
+                    {% for book in searched_books %}
+                        {% if book.front_cover %}
+                          <div class="swiper-slide h-auto">
+                              <a href="{% url 'book_view' book.id %}">
+                                  <img class="w-100" src="{{ book.front_cover.url }}" alt="{{ book.title }}" />
+                                </a>
+                          </div>
+                        {% else %}
+                          <div class="swiper-slide h-auto">
+                            <a href="{% url 'book_view' book.id %}">
+                              <img class="w-100" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{ book.title }}" />
+                            </a>
+                          </div>
+                        {% endif %}
+                    {% endfor %}                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+        
+        <!-- SEARCHED AUTHORS -->
+      {% if searched_authors %}
+        <section>
+          <div class="col-12 text-center py-2">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">Authors found</h1>
+          </div>
+          <div class="container-fluid">
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                  <div class="swiper-wrapper">
+                    {% for author in searched_authors %}
+                        
+                        <div class="swiper-slide h-auto">
+                            <a href="{% url 'author' author.id %}">
+                              <h2 class="my-5">{{ author.name }}</h2>
+                              </a>
+                        </div>
+                        
+                    {% endfor %}                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      <!-- SEARCHED USERS -->
+      {% if searched_users %}
+        <section>
+          <div class="col-12 text-center py-2">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">Users found</h1>
+          </div>
+          <div class="container-fluid">
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                  <div class="swiper-wrapper">
+                    {% for user in searched_users %}
+                        
+                        <div class="swiper-slide h-auto">
+                            <a href="{% url 'profile' user.id %}">
+                              <h2 class="my-5">{{ user.first_name }} {{ user.last_name }}</h2>
+                            </a>
+                        </div>
+                        
+                    {% endfor %}                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      <!-- SELECTED CATEGORY -->
+      {% if categorized_books %}
+        <section>
+          <div class="col-12 text-center py-8">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">{{ category_name }} Books</h1>
+          </div>
+          <div class="container-fluid">
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+                  <div class="swiper-wrapper">
+                    {% for book in categorized_books %}
+                        {% if book.front_cover %}
+                          <div class="swiper-slide h-auto">
+                              <a href="{% url 'book_view' book.id %}">
+                                  <img class="w-100" src="{{ book.front_cover.url }}" alt="{{ book.title }}" />
+                                </a>
+                          </div>
+                        {% else %}
+                          <div class="swiper-slide h-auto">
+                            <a href="{% url 'book_view' book.id %}">
+                              <img class="w-100" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{ book.title }}" />
+                            </a>
+                          </div>
+                        {% endif %}
+                    {% endfor %}                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %} 
+
+      </main>
+      <!-- ===============================================-->
+      <!--    End of Main Content-->
+      <!-- ===============================================-->
+{% endif %}
+{% endblock 'body' %}

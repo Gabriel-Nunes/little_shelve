@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}{{ user }} {% endblock 'title' %}
+
+{% block 'header' %}
+
+{% endblock 'header' %}
+
+{% block 'body' %}
+<main class="main" id="top">
+    <section class="py-0" id="header">
+      <div class="container">
+        <div class="row align-items-center min-vh-75 min-vh-md-50">
+          <div class="col-12 text-center py-8">
+            <h1 class="lh-sm fs-lg-6 fs-xxl-7">{{ user }} Books</h1>
+            <p class="text-700">Here you can manage your library</p>
+            <div class="mt-5"><a class="btn btn-sm btn-warning rounded-pill" href="{% url 'new_book' %}"><i class="bi bi-download"></i>Add book</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row gx-2">
+          <div class="col-12">
+            <div class="swiper-container pb-4 overflow-hidden" data-pagination-target="pagination1">
+              <div class="swiper-wrapper">
+                {% for book in user.books.all %}
+                    {% if book.front_cover %}
+                    <div class="swiper-slide h-auto">
+                        <a href="{% url 'book_view' book.id %}">
+                            <img class="w-100" src="{{ book.front_cover.url }}" alt="{{ book.title }}" />
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="swiper-slide h-auto">
+                      <a href="{% url 'book_view' book.id %}">
+                          <img class="w-100" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{ book.title }}" />
+                      </a>
+                  </div>
+                    {% endif %}
+                {% endfor %}                    
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</main>
+{% endblock 'body' %}

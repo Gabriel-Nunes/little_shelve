@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}Incoming Requests{% endblock 'title' %}
+
+{% block 'head' %}
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Request Date</th>
+                    <th scope="col">Lend Date</th>
+                    <th scope="col">Returned Date</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                        <tr>
+                            <td><a href="{% url 'book_view' request.book.id %}"><img src="{{ request.book.front_cover.url }}" style="width: 100px;" alt=""></a></td>
+                            <td><a href="{% url 'book_view' request.book.id %}">{{ request.book.title }}</a></td>
+                            <td><a href="{% url 'author' request.book.author.id %}">{{request.book.author}}</a></td>
+                            <td>{{ request.request_time|date:"SHORT_DATE_FORMAT" }}</td>
+                            <td>{{ request.lend_date|date:"SHORT_DATE_FORMAT" }}</td>
+                            <td>{{ request.return_date|date:"SHORT_DATE_FORMAT" }}</td>
+                            <td><a href="{% url 'profile' request.book.owner.id %}">{{ request.book.owner }}</a></td>
+                            <td>{% if request.accept and not request.return_date %}
+                                    <h5><span class="badge bg-danger"> shared </span></h6>
+                                {% elif request.return_date %}
+                                    <h5><span class="badge bg-success"> finished </span></h6>
+                                {% else %}
+                                    <h5><span class="badge bg-secondary"> waiting </span></h6>
+                                {% endif %}</td>
+                        </tr> 
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </div>
+</section>
+{% endblock 'body' %}

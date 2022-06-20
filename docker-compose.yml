@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/little_shelve
+    ports:
+      - 8000:8000
+      - 3000:3000
+    links:
+      - db
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${PWPOSTGRES}
+    depends_on:
+      - db
+  
+  # Postgres
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_NAME}
+      - POSTGRES_DB=${PWPOSTGRES}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:

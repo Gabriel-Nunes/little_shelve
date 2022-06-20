@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    {% block 'title' %}Little Shelve | Update Profile{% endblock 'title' %}
+    <link rel="stylesheet" href="{% static 'authentication/css/register.css' %}" type="text/css" media="screen">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+<div class="container" style="padding-top: 15%;">
+    <div class="row">
+        <div class="box">
+            <form action="{% url 'update_profile' %}" method="POST">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <legend class="titulo borda-bottom">Update account</legend>{% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">First name*</label>
+                    <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last name</label>
+                    <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Username*</label>
+                    <input type="text" class="form-control" name="username" value="{{ user.username }}">
+                </div>
+                <input type="submit" value="UPDATE" class="btn btn-primary">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <a class="btn btn-info" href="javascript:history.back()">Go Back</a>
+                <br>
+            </form>
+            <br>
+        </div>        
+    </div>
+</div>
+
+{% endblock 'body' %}

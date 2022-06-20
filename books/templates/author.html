@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}{{ author }} Books{% endblock 'title' %}
+{% block 'head' %}
+{% endblock 'head' %}
+
+{% block 'body' %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-12 text-center py-2">
+                <h1 class="lh-sm fs-lg-3 fs-xxl-5">{{ books|length }} books founded for {{ author }}</h1>
+              </div>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Lended to</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td><a href="{% url 'book_view' book.id %}"><img src="{{ book.front_cover.url }}" style="width: 100px;" alt=""></a></td>
+                            <td><a href="{% url 'book_view' book.id %}">{{ book.title }}</a></td>
+                            <td><a href="{% url 'author' book.author.id %}">{{ book.author }}</a></td>
+                            <td><a href="{% url 'profile' book.owner.id %}">{{ book.owner }}</a></td>
+                            {% if book.lended_to %}
+                                <td><a href="{% url 'profile' book.lended_to.id %}">{{ book.lended_to }}</a></td>
+                            {% else %}
+                            <td>---------</a></td>
+                            {% endif %}
+                        </tr> 
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </div>
+</section>
+{% endblock 'body' %}

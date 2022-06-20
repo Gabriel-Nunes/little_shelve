@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap %}
+
+{% block 'title' %}New book{% endblock 'title' %}
+
+{% block 'head' %}
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <!-- ============================================-->
+    <!-- ============= <section> begin ==============-->
+    <section class="py-6">
+
+        <div class="container">
+            <div class="row">
+            <div class="col-12">
+                <h1 class="lh-sm fs-lg-3 fs-xxl-3" style="padding-top: 12%; padding-bottom: 5%;">Create Book</h1>
+            </div>
+            <br>
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+            <br>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="row justify-content-start">
+                        <form action="{% url 'fetch_book' %}" method="post">{% csrf_token %}
+                            <div class="container">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">ISBN code:</label>
+                                    <p>{{ isbn }}</p>
+                                </div>
+                                <input type="text" name="isbn" value="{{ isbn }}" style="margin-bottom: 10%;">
+                                
+                                <button class="btn btn-success btn-sm" type="submit" href="{% url 'fetch_book' %}">Search book information</button>
+                        </form>
+
+                    </div>
+
+                </div>
+                <div class="col-4">
+                    <div class="row align-content-end" style="margin-left: 30%; padding-top: 15px;">
+                        <img src="{{ front_cover_url }}" alt="">
+                    </div>
+                </div>
+                <br>
+                <form action="{% url 'new_book' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="mb-3" style="padding-top: 5%;">
+                        <label for="exampleFormControlInput1" class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" value="{{ title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Authors</label>
+                        <input type="text" class="form-control" name="author" value="{{ author }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Category</label>
+                        <select class="form-select" aria-label="Default select example" name="category">
+                            <option selected value="Undefined">-------</option>
+                            {% for category in categories %}
+                                <option value="{{category.0}}">{{category.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Language</label>
+                        <select class="form-select" aria-label="Default select example" name="language">
+                            <option selected value="POR">-------</option>
+                            {% for language in languages %}
+                                <option value="{{language.0}}">{{language.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Summary</label>
+                        <textarea type="text" class="form-control" name="summary">{{ summary }}</textarea>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                            {{ cover_form.as_p }}
+                    </div>
+                    <input type="hidden" name="front_cover_url" value="{{ front_cover_url }}">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Number of pages</label>
+                        <input class="form-control" type="number" name="num_pages" value="{{ num_pages }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Release year</label>
+                        <input class="form-control" type="number" name="release_year">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Edition</label>
+                        <input class="form-control" type="number" name="edition">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">My rate</label>
+                        <input class="form-control" type="number" name="my_rate" min="0" max="10">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">External link</label>
+                        <input class="form-control" type="text" name="external_link">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Related</label>
+                        <br>
+                        <select name="related" multiple>
+                            {% for book in my_books %}
+                                <option value="{{book.id}}">{{book.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                   
+                    <button class='btn btn-primary' href="{% url 'new_book' %}" type="submit">Save</button>
+                </form>
+
+            </div>
+
+            </div>
+            <hr class="mt-6" />
+        </div>
+    </section>
+    <!-- end of .container-->
+    
+{% endblock 'body' %}
+
+<script>
+function hideNewAuthor() {
+    var x = document.getElementById('new_author');
+    if (x.style.display == 'none'){
+        x.style.display == 'block';
+    } else {
+        x.style.display == 'none';
+    }
+}
+</script>

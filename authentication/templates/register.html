@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    {% block 'title' %}Little Shelve | New user{% endblock 'title' %}
+    <link rel="stylesheet" href="{% static 'authentication/css/register.css' %}" type="text/css" media="screen">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+<div class="container">
+    <div class="row">
+        <div class="box">
+            <form action="{% url 'register' %}" method="POST">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <legend class="titulo borda-bottom">Create account</legend>{% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">First name</label>
+                    <input type="text" class="form-control" name="first_name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last name</label>
+                    <input type="text" class="form-control" name="last_name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirm_password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Parent Email</label>
+                    <input type="email" class="form-control" name="email">
+                </div>
+                <input type="submit" value="CREATE" class="btn btn-primary">
+                <a href="{% url 'login' %}" class="btn btn-info">Login</a>
+            </form>
+        </div>        
+    </div>
+</div>
+
+{% endblock 'body' %}

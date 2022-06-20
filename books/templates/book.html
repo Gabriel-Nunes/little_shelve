@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'title' %}{{ book }}{% endblock 'title' %}
+{% block 'header' %}
+{% endblock 'header' %}
+
+{% block 'body' %}
+
+   
+    <!-- Book section-->
+    <br>
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                {% if book.front_cover %}
+                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ book.front_cover.url }}" alt="{{book.title}}"></div>
+                {% else %}
+                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" alt="{{book.title}}"></div>
+                {% endif %}
+
+                <div class="col-md-6">
+                    <div class="small mb-1">ISBN: </div>
+                    <h1 class="display-5 fw-bolder">{{book.title}}</h1>
+                    <p class="display-7"><a href="{% url 'author' book.author.id %}">{{ book.author }}</a></p>
+                    {% if book.summary == 'None' %}
+                        <p class="lead"></p>
+                    {% else %}
+                        <p class="lead">{{book.summary}}</p>
+                    {% endif %}
+                    
+                    <div class="row-cols-md-3">
+                        <div class="col-md-3">  
+                            <p>Owner: <a class="" href="">{{book.owner}}</a></p>
+                        </div>
+                        <div class="col-md-3">
+                            
+                            {% if book.owner == request.user and not book.lended_to %}
+                                    {% if book_requests %}
+                                        <span>Received requests:</span>
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#showRequestsModal">
+                                            {{ book_requests|length }}
+                                        </button>
+                                    {% endif %}
+                            {% endif %}
+                            
+                        </div><br>
+                        {% if book.lended_to %}
+                            <div class="col-md-3">  
+                                <p>Lended to: <a href="{% url 'profile' book.lended_to.id %}" >{{ book.lended_to }}</a> at {{ active_request.0.lend_date }}</p>
+                            </div>
+                            {% if book.owner == request.user %}
+                            <div class="col">
+                                {% if active_request %}
+                                    <button type="button" class="btn btn-danger btn-sm" style="margin-bottom: 15px;" data-bs-toggle="modal" data-bs-target="#returnBookRequestModal">
+                                        Return book    
+                                    </button>   
+                                {% endif %}
+                            </div> 
+                            {% endif %}
+                        {% endif %}
+
+                        
+                        <div class="col">  
+                            {% if user_requests %}                                
+                                    {% if book.lended_to == request.user and not user_requests.0.return_date %}
+                                    <div class="col">
+                                        <h5><a class="badge bg-success" href="">Shared with you</a></h5>
+                                    </div> 
+                                        {% elif user_requests.0.request_user == request.user %}
+                                                <div class="col">
+                                                    <span>You've sent a request at:</span>
+                                                    {{ user_requests.0.request_time }}
+                                                </div>
+                                            <!-- "Cancel request" button -->
+                                            {% if not user_requests.0.accept %}
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-danger btn-sm" style="margin-bottom: 15px;" data-bs-toggle="modal" data-bs-target="#cancelBookRequestModal">Cancel request</button>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% comment %} {% endif %} {% endcomment %}
+                                <div class="col">
+                                    {% if book.owner == request.user %}
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#returnBookRequestModal">
+                                            Return book    
+                                        </button>        
+                                    {% endif %}
+                                    </a></h4>
+                                </div> 
+                            {% endif %}
+
+                            {% if book.owner != request.user %}
+                                {% if not user_requests %}
+                                    <p>Ask {{book.owner}} to share with you:</p>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookRequestModal">
+                                        I wanna read
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    
+                    {% if request.user == book.owner %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Favorite icon -->
+                            <div class="d-flex">
+                                {% if book.is_favorite %}
+                                <svg xmlns="{% static 'assets/img/icons/heart.svg' %}" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                </svg>
+                                {% else %}
+                                <svg xmlns="{% static 'assets/img/icons/heart.svg' %}" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                </svg>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- My rate -->
+                            {% if book.my_rate %}
+                            <div class="lead-sm">
+                                <p>My rate: {{book.my_rate}}</p>
+                                <span></span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- status -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="lead-sm">
+                                {% if book.status == 'Not reading' %}
+                                    <span class="badge text-bg-secondary">{{book.status}}</span>
+                                {% elif book.status == 'Reading' %}
+                                    <span class="badge text-bg-warning">{{book.status}}</span>
+                                {% else %}
+                                    <span class="badge text-bg-success">{{book.status}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-6" style="margin-right: 15%; margin-bottom: 15%;">
+                           
+                                <a class="btn btn-primary" style="margin-top: 15%;" href="{% url 'edit_book' book.id %}">Edit</a>
+                            
+                        </div>
+                        <div class="col-sm-6">
+                            
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    Delete
+                                </button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Modal -->
+      
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Book</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <a href="{% url 'delete_book' book.id %}" class="btn btn-primary">Delete</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            {% endif %}
+                    </div>
+                    
+                    <!-- Modal SHOW BOOK REQUESTS-->
+                    <div class="modal fade" id="showRequestsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Sharing Requests:</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'accept_request' %}" method="post">{% csrf_token %}
+                                <div class="modal-body">
+                                    {% for request in book_requests %}
+                                        
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="request_id" value="{{ request.id }}">
+                                                <input type="hidden" name="book_id" value="{{ book.id }}">
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    {{ request.request_user }} at {{ request.request_time }} <br>
+                                                    "{{ request.message.text }}"<br>
+                                                </label>
+                                            </div>
+                                        
+                                    {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Accept request</button>
+                            </form>{% csrf_token %}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- Modal MAKE BOOK REQUEST-->
+                    <div class="modal fade" id="bookRequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Request book</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'book_request' %}" method="post">{% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">Message:</label>
+                                        <textarea name="message" class="form-control" id="message-text"></textarea>
+                                        <input type="hidden" name="requested_book" value="{{ book.id }}">
+                                        <input type="hidden" name="request_user" value="{{ request.user.id }}">
+                                        <input type="hidden" name="book_owner" value="{{ book.owner.id }}">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success">Send request</button>
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal CANCEL BOOK REQUEST -->
+                    <div class="modal fade" id="cancelBookRequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Cancel request</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Do you want to cancel this book sharing request?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                              {% if user_requests %}
+                                <form action="{% url 'cancel_request' %}" method="post">{% csrf_token %}
+                                    <input type="hidden" name="book_request" value="{{user_requests.0.id}}">
+                                    <button type="submit" class="btn btn-danger">Cancel request</button>
+                                </form>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    
+                    <!-- Modal RETURN BOOK -->
+                    <div class="modal fade" id="returnBookRequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Return book</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <form action="{% url 'return_book' %}" method="post">{% csrf_token %}
+                                    <div class="modal-body">
+                                        {% if book.owner == request.user %}
+                                            <p>Did you get back your book?</p> 
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                                                    <input type="hidden" name="book_request" value="{{active_request.0.id}}">
+                                                    <button type="submit" class="btn btn-danger">Yes, close request</button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    
+    </section>
+    <!-- Related items section-->
+    <section class="py-5 bg-light">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Related books</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                
+            {% for related_book in related_books %}
+            
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Book image-->
+                        <a href="{% url 'book_view' related_book.id %}"><img class="card-img-top" src="{{ related_book.front_cover.url }}" alt="related_book.title"></a>
+                        
+                        <!-- Book details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Related book name-->
+                                <h5 class="fw-bolder">{{related_book.title}}</h5>
+                                <!-- Related book price-->
+                                <a href="{% url 'author' related_book.author.id %}">{{related_book.author}}</a> 
+                            </div>
+                        </div>
+                        <!-- Related book actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'book_view' related_book.id %}">View book</a></div>
+                        </div>
+                    </div>
+                </div>
+            
+            {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+    
+
+
+
+{% endblock 'body' %}

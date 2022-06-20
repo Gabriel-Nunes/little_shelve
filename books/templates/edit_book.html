@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap %}
+
+{% block 'title' %}Edit {{ book }} {% endblock 'title' %}
+{% block 'head' %}
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <!-- ============================================-->
+    <!-- ============= <section> begin ==============-->
+    <section class="py-6">
+
+        <div class="container">
+            <div class="row">
+            <div class="col-12">
+                <h1 class="lh-sm fs-lg-3 fs-xxl-3" style="padding-top: 30px;">Edit Book</h1>
+            </div>
+            <br>
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+            <br>
+            </div>
+            <div class="row">
+            
+                <div class="container">
+
+                <form action="{% url 'edit_book' book.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}    
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" value="{{book.title}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Author</label>
+                        <input type="text" class="form-control" name="author" id="new_author" value="{{ book.author }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Category</label>
+                        <select class="form-select" aria-label="Default select example" name="category">
+                                <option selected value="{{ book.category }}">{{ display_category }}</option>
+                            {% for category in categories %}
+                                <option class="fw-bolder fst-italic" value="{{category.0}}">{{category.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Language</label>
+                        <select class="form-select" aria-label="Default select example" name="language">
+                            <option selected value="{{ book.language }}">{{ display_language }}</option>
+                            {% for language in languages %}
+                                <option class="fw-bolder fst-italic" value="{{language.0}}">{{language.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Summary</label>
+                        <textarea type="text" class="form-control" name="summary">{{ book.summary }}</textarea>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <div class="row align-items-start" style="padding-bottom: 5%;">
+                            <div class="col" style="width: 30px; height: 80px;">
+                                {% if book.front_cover %}
+                                    <img src="{{ book.front_cover.url }}" style="max-width: 100%; max-height: 100%;" alt=""><br>
+                                {% else %}
+                                    <img src="{% static 'img/gallery/kid-4092600_1280.jpg' %}" style="max-width: 100%; max-height: 100%;" alt=""><br>
+                                {% endif %}
+                            
+                                {{ front_form }}
+
+                            </div>
+                            <br>
+                            <div class="col" style="width: 30px; height: 80px;">
+                                {% if book.back_cover %}
+                                    <img src="{{ book.back_cover.url }}" style="max-width: 100%; max-height: 100%;" alt=""><br>
+                                {% else %}
+                                    <img src="{% static 'assets/img/gallery/kid-4092600_1280.jpg' %}" style="max-width: 100%; max-height: 100%;" alt=""><br>
+                                {% endif %}
+                            
+                                  {{ back_form }}
+                            
+                                </div>
+                            
+                          </div>
+                    </div>
+                    <br>
+                    <div class="mb-3" style="padding-top: 5%;">
+                        <label for="formFile" class="form-label">Number of pages</label>
+                        <input class="form-control" type="number" name="num_pages" value="{{book.num_pages}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Release year</label>
+                        <input class="form-control" type="number" name="release_year" value="{{book.release_year}}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Edition</label>
+                        <input class="form-control" type="number" name="edition" value="{{book.edition}}">
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <div class="slidecontainer">
+                                    <input type="range" min="0" max="10" value="{{ book.my_rate }}" class="slider" id="my_rate" step="1" name="my_rate">
+                                    <p>My rate: <span id="demo" aria-placeholder=""></span></p>
+                                </div>
+                                <script>
+                                    var slider = document.getElementById("my_rate");
+                                    var output = document.getElementById("demo");
+                                    output.innerHTML = slider.value;
+                                    
+                                    slider.oninput = function() {
+                                      output.innerHTML = this.value;
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Favorite</label>
+                                <input class="form-check-input" type="checkbox" name="is_favorite" value="{{book.is_favorite}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Related</label>
+                        <br>
+                        <select name="related" multiple>
+                            {% for b in my_books %}
+                                {% if b in related_books %}
+                                    <option selected value="{{b.id}}">{{b.title}}</option>    
+                                {% elif b != book %}
+                                    <option value="{{b.id}}">{{b.title}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br>
+                    {% if book.owner == request.user or lended_to_id == request.user%}
+                        <div class="mb-3">
+                              <div class="form-check">
+                                  {{ status_form }}                           
+                              </div>
+                        </div>
+                    {% endif %}
+                    <button class='btn btn-primary' href="{% url 'edit_book' book.id %}" type="submit">Save</button>
+                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                    <a class="btn btn-outline-secondary" href="{% url 'book_view' book.id %}">Back</a>
+                </form>
+
+            </div>
+
+            </div>
+            <hr class="mt-6" />
+        </div>
+    </section>
+    <!-- end of .container-->
+
+{% endblock 'body' %}
