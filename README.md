@@ -66,7 +66,7 @@ Paste the following content in a file named as ".env" and place it on projects r
 
     SECRET_KEY=$DJANGOSECRETKEY
     DEBUG=True
-    PWPOSTGRES=postgres
+    PWPOSTGRES=supersecretpassword
     POSTGRES_NAME=postgres
     POSTGRES_USER=postgres
 
