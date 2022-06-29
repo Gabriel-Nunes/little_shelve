@@ -14,9 +14,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    '127.0.0.1'
+    ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,22 +62,16 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'little_shelve.wsgi.application'
+WSGI_APPLICATION = 'little_shelve.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.environ.get('POSTGRES_NAME'),
-#         'USER': os.environ.get('POSTGRES_USER'),
-#         'PASSWORD': os.environ.get('PWPOSTGRES'),
-#         'HOST': 'localhost',
-#         'PORT': 5432,
-#     }
-# }
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('PWPOSTGRES'),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
@@ -144,7 +141,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development 
 # Transmit cookies only by HTTPS
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
-
-# Configure Django App for Heroku.
-import django_on_heroku
-django_on_heroku.settings(locals())
