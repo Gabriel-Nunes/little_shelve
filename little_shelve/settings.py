@@ -16,7 +16,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == True
 
-ALLOWED_HOSTS = ['https://little-shelve.herokuapp.com/']
+ALLOWED_HOSTS = [
+    'https://little-shelve.herokuapp.com',
+    # '0.0.0.0',
+    ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -61,24 +64,24 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'little_shelve.wsgi.application'
+WSGI_APPLICATION = 'little_shelve.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('PWPOSTGRES'),
-        'HOST': 'DATABASE_URL',
-        'PORT': 5432,
-    }
-}
 # DATABASES = {
 #     'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('POSTGRES_NAME'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('PWPOSTGRES'),
+#         'HOST': 'DATABASE_URL',
+#         'PORT': 5432,
 #     }
 # }
+DATABASES = {
+    'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # Persistent database connections
 CONN_MAX_AGE = True
@@ -140,7 +143,7 @@ MESSAGE_TAGS = {
 }
 
 # EMAIL SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development settings
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development settings
 
 # Transmit cookies only by HTTPS
 # CSRF_COOKIE_SECURE = True

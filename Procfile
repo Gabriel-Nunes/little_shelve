@@ -1,1 +1,1 @@
-web: gunicorn little_shelve.wsgi
+web: gunicorn little_shelve.wsgi --log-file -
