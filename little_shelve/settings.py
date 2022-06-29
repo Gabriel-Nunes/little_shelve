@@ -20,7 +20,7 @@ ALLOWED_HOSTS = ['https://little-shelve.herokuapp.com/']
 
 # Application definition
 INSTALLED_APPS = [
-    # "whitenoise.runserver_nostatic",
+    "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -151,4 +151,4 @@ import django_on_heroku
 django_on_heroku.settings(locals())
 
 # Whitenoise cache and compression support
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
