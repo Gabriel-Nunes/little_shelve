@@ -151,4 +151,4 @@ import django_on_heroku
 django_on_heroku.settings(locals())
 
 # Whitenoise cache and compression support
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
