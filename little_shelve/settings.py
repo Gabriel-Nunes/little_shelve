@@ -1,6 +1,5 @@
-from pathlib import Path
 import os
-
+import django_on_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,7 +17,6 @@ DEBUG = os.environ.get('DEBUG') == True
 
 ALLOWED_HOSTS = [
     'https://little-shelve.herokuapp.com',
-    # '0.0.0.0',
     ]
 
 # Application definition
@@ -66,20 +64,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'little_shelve.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.environ.get('POSTGRES_NAME'),
-#         'USER': os.environ.get('POSTGRES_USER'),
-#         'PASSWORD': os.environ.get('PWPOSTGRES'),
-#         'HOST': 'DATABASE_URL',
-#         'PORT': 5432,
-#     }
-# }
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('PWPOSTGRES'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': 5432,
     }
 }
 
@@ -119,9 +111,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
+django_on_heroku.settings(locals())
+
 
 # Media files (sent by user)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -131,6 +124,7 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # ERROR MESSAGES
 from django.contrib.messages import constants
