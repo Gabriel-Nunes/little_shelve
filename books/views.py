@@ -1,4 +1,5 @@
 from datetime import datetime
+from fileinput import filename
 import re
 import requests
 import os
@@ -13,12 +14,24 @@ from django.contrib.messages import constants
 from .models import Book, ExternalLink, Author, User, Message, BookRequest
 from .forms import BookCoverForm, FrontCoverForm, BackCoverForm, RelatedForm, BookStatusForm
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.vary import vary_on_cookie
-from django.views.decorators.cache import cache_page
 from django.core.cache import cache
+from unicodedata import normalize
+import re
 
 # Google Books API key
 API_KEY = "AIzaSyC6RHIK5m0wElaZTHhKaOmc4uoVM9YsVns"
+
+def to_normal(txt: str) -> str:
+    """
+    Returns a copy of a string replacing special characters
+    by its ASCII equivalent.
+    Also replace spaces to underscore.
+    """
+    t = normalize("NFKD", txt).encode("ASCII", "ignore").decode("ASCII")
+    t.strip()
+    t = re.sub("\s", "_", t)
+    normalized_text = ''.join([char for char in t if char.isalnum() or char == '_'])
+    return normalized_text
 
 @login_required(login_url='/auth/login')
 def home(request) -> HttpResponse:
@@ -31,7 +44,7 @@ def home(request) -> HttpResponse:
             'books': Book.objects.all(),
             'lended_to_me': Book.objects.filter(lended_to=request.user),
             'my_books': Book.objects.filter(owner=request.user),
-            'incoming_requests': BookRequest.objects.filter(book_owner=request.user),
+            'incoming_requests': BookRequest.objects.filter(book_owner=request.user).filter(lend_date=None),
             'categories': Book.category_choices,
             }
         
@@ -54,13 +67,15 @@ def new_book(request):
     # Method to download covers fetched by google API
     def _download_cover(url, fileName):
         """Download an image from url"""
+        # Break long filenames to 
+        file_name = fileName[:50] if len(fileName) > 50 else fileName
         if url:
             r = requests.get(url)
             r.raise_for_status()
-            with open(fileName, 'wb') as file:
+            with open(file_name, 'wb') as file:
                 for chunk in r.iter_content(chunk_size=10000):
                     file.write(chunk)
-            return fileName.strip('media')
+            return file_name.strip('media')
         else:
             return None
 
@@ -90,7 +105,8 @@ def new_book(request):
             url = request.POST.get('front_cover_url')
             title = post_values.get('title')
             file_name = os.path.join('media', 'book_covers', f'{title}_front_cover.jpg')
-            cover = _download_cover(url, file_name)
+            cover_path = to_normal(file_name)[:255]
+            cover = _download_cover(url, cover_path)
         else:
             cover = None
 
@@ -188,6 +204,7 @@ def book_view(request, book_id: int) -> HttpResponse:
         'user_requests': user_requests,
         'book_requests': book_requests,
         'active_request': active_request,
+        'incoming_requests': BookRequest.objects.filter(book_owner=request.user).filter(lend_date=None),
         }
     if request.method == 'GET':
         print(context['book_requests'])
