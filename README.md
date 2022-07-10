@@ -5,7 +5,7 @@ A complete book sharing system for kids.
 
 ## Main idea
 
-#### This project remains on a complete book management system which allows registered users to share them books with each other in a secure environment.
+#### This project consists of a complete book management system which allows registered users to share them books with each other in a secure environment.
 
 ## Features
 1. Built in Python (Django). 🐍
