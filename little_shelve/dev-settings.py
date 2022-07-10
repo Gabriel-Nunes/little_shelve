@@ -17,7 +17,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = True
 
 ALLOWED_HOSTS = [
-
+        '0.0.0.0',
+        '127.0.0.1',
     ]
 
 # Application definition
@@ -63,16 +64,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'little_shelve.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'postgres',
-#         'USER': 'user',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': 5432,
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
+    }
+}
 
 # Persistent database connections
 CONN_MAX_AGE = True
