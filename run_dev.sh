@@ -1,4 +1,3 @@
 #/bin/bash
 
-source venv/bin/activate
-docker-compose up
+docker-compose build web db && docker-compose up

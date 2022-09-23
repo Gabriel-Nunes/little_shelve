@@ -66,7 +66,7 @@ Paste the following content in a file named as ".env" and place it on projects r
 
     SECRET_KEY=$DJANGOSECRETKEY
     DEBUG=True
-    PWPOSTGRES=supersecretpassword
+    PWPOSTGRES=postgres
     POSTGRES_NAME=postgres
     POSTGRES_USER=postgres
 
@@ -76,6 +76,7 @@ As the system is running in a docker container you should be included in "docker
 
 Finally, reboot your system, go to the project directory and run:
 
+    docker-compose build web (only the 1st time)
     ./run_dev.sh
 
 Your books sharing system is suposed to be running on 0.0.0.0:8000.
