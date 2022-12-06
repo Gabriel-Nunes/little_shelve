@@ -30,11 +30,11 @@ A complete book sharing system for kids.
 
 #### Home screen shows a fluid navigation thanks to Bootstrap nav-bar.
 #### Search bar is easy to use and provide a wide search to quickly find books, users or authors.
-#### Also has a notification sign upside to show user when someone ask for a book sharing request. 
+#### Also has a notification sign upside to show user when someone asks for a book sharing request. 
 
 ![alt](screenshots/nav-bar.png)
 
-**Book sharing requests are easy to made and provide to users a clear management system to take care of lended books.**
+**Book sharing requests are easy to made and provide to users a clear management system to take care of borrowed books.**
 
 ![alt](screenshots/share-request.gif)
 
@@ -52,7 +52,7 @@ A complete book sharing system for kids.
 
 ## Installation
 
-To get it running on a linux server, launch the commands bellow:
+To get it running on a linux server, launch the commands below:
 
     git clone https://github.com/Gabriel-Nunes/little_shelve.git
     cd little_shelve/
@@ -70,7 +70,7 @@ Paste the following content in a file named as ".env" and place it on projects r
     POSTGRES_NAME=postgres
     POSTGRES_USER=postgres
 
-As the system is running in a docker container you should be included in "docker" group:
+As the system is running in a docker container, you should be included in "docker" group:
     
     sudo usermod -aG docker $USER
 
@@ -79,6 +79,6 @@ Finally, reboot your system, go to the project directory and run:
     docker-compose build web (only the 1st time)
     ./run_dev.sh
 
-Your books sharing system is suposed to be running on 0.0.0.0:8000.
+Your books sharing system is supposed to be running on 0.0.0.0:8000.
 
 >>>>>>> #### Have fun! 🤓
