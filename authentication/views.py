@@ -49,8 +49,7 @@ def register(request: request) -> User:
 
         # Save new user
         try:
-            user = User.objects.create(username = username)
-            user.set_password(password)
+            user = User.objects.create_user(username=username, password=password)
             user.first_name = firs_name
             user.last_name = last_name
             user.email = email
