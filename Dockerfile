@@ -19,5 +19,7 @@ RUN pip install -r /little_shelve/requirements.txt
 RUN pip install -r /little_shelve/requirements-opt.txt
 ADD . /little_shelve/
 
+CMD python manage.py makemigrations && python manage.py migrate
+
 # Django service port
 EXPOSE 8000
